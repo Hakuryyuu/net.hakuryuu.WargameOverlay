@@ -28,24 +28,72 @@
         /// </summary>
         private void InitializeComponent()
         {
-            tbxResult = new TextBox();
+            components = new System.ComponentModel.Container();
             rtbResult = new RichTextBox();
+            materialButton1 = new MaterialSkin.Controls.MaterialButton();
+            timer1 = new System.Windows.Forms.Timer(components);
+            materialButton2 = new MaterialSkin.Controls.MaterialButton();
             SuspendLayout();
-            // 
-            // tbxResult
-            // 
-            tbxResult.Location = new Point(873, 84);
-            tbxResult.Name = "tbxResult";
-            tbxResult.Size = new Size(100, 23);
-            tbxResult.TabIndex = 1;
             // 
             // rtbResult
             // 
-            rtbResult.Location = new Point(20, 128);
+            rtbResult.BackColor = Color.FromArgb(50, 50, 50);
+            rtbResult.BorderStyle = BorderStyle.None;
+            rtbResult.Dock = DockStyle.Fill;
+            rtbResult.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            rtbResult.ForeColor = Color.FromArgb(255, 255, 192);
+            rtbResult.Location = new Point(3, 64);
             rtbResult.Name = "rtbResult";
-            rtbResult.Size = new Size(1451, 859);
+            rtbResult.ReadOnly = true;
+            rtbResult.Size = new Size(1485, 935);
             rtbResult.TabIndex = 2;
             rtbResult.Text = "";
+            // 
+            // materialButton1
+            // 
+            materialButton1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton1.Depth = 0;
+            materialButton1.HighEmphasis = true;
+            materialButton1.Icon = null;
+            materialButton1.Location = new Point(1404, 28);
+            materialButton1.Margin = new Padding(4, 6, 4, 6);
+            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton1.Name = "materialButton1";
+            materialButton1.NoAccentTextColor = Color.Empty;
+            materialButton1.Size = new Size(84, 36);
+            materialButton1.TabIndex = 3;
+            materialButton1.Text = "REFRESH";
+            materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton1.UseAccentColor = false;
+            materialButton1.UseVisualStyleBackColor = true;
+            materialButton1.Click += materialButton1_Click;
+            // 
+            // timer1
+            // 
+            timer1.Enabled = true;
+            timer1.Interval = 60000;
+            timer1.Tick += timer1_Tick;
+            // 
+            // materialButton2
+            // 
+            materialButton2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton2.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton2.Depth = 0;
+            materialButton2.HighEmphasis = true;
+            materialButton2.Icon = null;
+            materialButton2.Location = new Point(1238, 28);
+            materialButton2.Margin = new Padding(4, 6, 4, 6);
+            materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton2.Name = "materialButton2";
+            materialButton2.NoAccentTextColor = Color.Empty;
+            materialButton2.Size = new Size(158, 36);
+            materialButton2.TabIndex = 4;
+            materialButton2.Text = "ENABLE OVERLAY";
+            materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton2.UseAccentColor = false;
+            materialButton2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -53,19 +101,22 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(1491, 1002);
+            Controls.Add(materialButton2);
+            Controls.Add(materialButton1);
             Controls.Add(rtbResult);
-            Controls.Add(tbxResult);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Form1";
-            Text = "Wargame";
+            Text = "Wargame Preloader";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private TextBox tbxResult;
         private RichTextBox rtbResult;
+        private MaterialSkin.Controls.MaterialButton materialButton1;
+        private System.Windows.Forms.Timer timer1;
+        private MaterialSkin.Controls.MaterialButton materialButton2;
     }
 }

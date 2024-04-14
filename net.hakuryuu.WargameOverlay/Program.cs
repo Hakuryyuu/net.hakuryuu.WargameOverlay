@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using net.hakuryuu.WargameOverlay.Services;
+using net.hakuryuu.WargameOverlay.Views;
 using System.Data;
 
 namespace net.hakuryuu.WargameOverlay
@@ -28,7 +29,9 @@ namespace net.hakuryuu.WargameOverlay
             return Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) => {
                     services.AddSingleton<net.hakuryuu.WargameOverlay.Services.IDataReader, DataReader>();
+                    services.AddTransient<IDataExtractor, DataExtractor>();
                     services.AddTransient<Form1>();
+                    services.AddTransient<Overlay>();
                 });
         }
     }

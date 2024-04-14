@@ -6,37 +6,59 @@ using Squalr.Engine.Utils.Extensions;
 using System.DirectoryServices.ActiveDirectory;
 using net.hakuryuu.WargameOverlay.Services;
 using MaterialSkin.Controls;
+using net.hakuryuu.WargameOverlay.Views;
 
 namespace net.hakuryuu.WargameOverlay
 {
     public partial class Form1 : MaterialForm
     {
         private readonly IDataReader _dataReader;
-        public Form1(IDataReader dataReader)
+        private readonly Overlay _overlay;
+        private string _rawData;
+        public Form1(IDataReader dataReader, Overlay overlay)
         {
             InitializeComponent();
             _dataReader = dataReader;
-            //this.BackColor = Color.LimeGreen;
-            //this.TransparencyKey = Color.LimeGreen;
+            _overlay = overlay;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            try
-            {
-                rtbResult.Text = _dataReader.GetRawData().Result;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            
+            SetTheme();
+            GetData();
+            _overlay.SetRawData(_rawData);
+            _overlay.Show();
+           
 
         }
 
-        protected override void OnPaintBackground(PaintEventArgs e)
+        private void GetData()
         {
-            e.Graphics.FillRectangle(Brushes.LimeGreen, e.ClipRectangle);
+            try
+            {
+                _rawData = _dataReader.GetRawData().Result;
+                rtbResult.Text = _rawData;
+            }
+            catch (Exception ex)
+            {
+                MaterialMessageBox.Show(ex.Message,"Error occured");
+            }
+        }
+
+        private void SetTheme()
+        {
+            this.SkinManager.Theme = MaterialSkin.MaterialSkinManager.Themes.DARK;
+            this.SkinManager.ColorScheme = new MaterialSkin.ColorScheme(MaterialSkin.Primary.Green500, MaterialSkin.Primary.Green600, MaterialSkin.Primary.Green200, MaterialSkin.Accent.Green700, MaterialSkin.TextShade.BLACK);
+        }
+
+        private void materialButton1_Click(object sender, EventArgs e)
+        {
+            GetData();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            GetData();
         }
     }
 }
