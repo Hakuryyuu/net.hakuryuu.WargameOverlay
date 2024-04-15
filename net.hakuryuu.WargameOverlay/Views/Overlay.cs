@@ -1,4 +1,5 @@
-﻿using net.hakuryuu.WargameOverlay.Services;
+﻿using net.hakuryuu.RankedReportDataImporter.PremadeModels;
+using net.hakuryuu.WargameOverlay.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,11 +15,15 @@ namespace net.hakuryuu.WargameOverlay.Views
     public partial class Overlay : Form
     {
         private readonly IDataExtractor _dataExtractor;
-        private string _rawJson;
-        public Overlay(IDataExtractor dataExtractor)
+        private readonly IRankedInfo _rankedInfo;
+
+        public Overlay(IDataExtractor dataExtractor, IRankedInfo rankedInfo)
         {
             InitializeComponent();
+
             _dataExtractor = dataExtractor;
+            _rankedInfo = rankedInfo;
+
             this.TopMost = true;
             this.BackColor = Color.Black;
             this.TransparencyKey = Color.Black;
@@ -26,21 +31,42 @@ namespace net.hakuryuu.WargameOverlay.Views
 
         public void SetRawData(string json)
         {
-            _rawJson = json;
-            _dataExtractor.MatchesCount(json);
-            var res = _dataExtractor.GetPlayers();
-
-            lblPlayer1.Text = res[0].PlayerName;
-            lblReportsPlayer1.Text = "No Reports found";
-            lblReportsPlayer1.ForeColor = Color.LimeGreen;
-            if (res.Count == 2) // Sologame
+            if (json != "404") // Only display if a game is running
             {
-                lblPlayer2.Text = res[1].PlayerName;
+                _dataExtractor.MatchesCount(json);
+                var res = _dataExtractor.GetPlayers();
+
+                var player1 = _rankedInfo.GetRankedReports(res[0].PlayerUserId).Result;
+                var player2 = _rankedInfo.GetRankedReports(res[1].PlayerUserId).Result;
+
+                lblReportsPlayer1.Visible = true;
+                lblPlayer2.Visible = true;
+                lblReportsPlayer2.Visible = true;
+
+                var resPlayer1 = SetReports(ref player1);
+                lblPlayer1.Text = res[0].PlayerName;
+                lblReportsPlayer1.Text = resPlayer1.reports;
+                lblReportsPlayer1.ForeColor = resPlayer1.color;
+
+                if (res.Count > 1) // Sologame
+                {
+                    var resPlayer2 = SetReports(ref player2);
+                    lblPlayer2.Text = res[1].PlayerName;
+                    lblReportsPlayer2.Text = resPlayer2.reports;
+                    lblReportsPlayer2.ForeColor = resPlayer2.color;
+                }
+                else
+                {        
+                    lblPlayer2.Text = "COMPUTER";
+                    lblReportsPlayer2.Text = "AI Game";
+                }
             }
             else
             {
-                lblPlayer2.Text = "F-5A PUFF The Magic Dragon";
-                lblReportsPlayer2.Text = "hr:5";
+                lblPlayer1.Text = "No Match found.";
+                lblReportsPlayer1.Visible = false;
+                lblPlayer2.Visible = false;
+                lblReportsPlayer2.Visible = false;
             }
             
         }
@@ -63,6 +89,25 @@ namespace net.hakuryuu.WargameOverlay.Views
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             e.Graphics.FillRectangle(Brushes.Black, e.ClipRectangle);
+        }
+
+        private (string reports, Color color) SetReports(ref ReportedPlayer player)
+        {
+            var str = String.Empty;
+            if (player.Reports.hr == 0
+                && player.Reports.hr == 0
+                && player.Reports.hr == 0
+                && player.Reports.hr == 0
+                && player.Reports.hr == 0)
+            {
+                str = "No Reports found!";
+                return (str, Color.LimeGreen);
+            }
+            else
+            {
+                str = $"hr:{player.Reports.hr} sr:{player.Reports.sr} tr:{player.Reports.tr} ohc:{player.Reports.ohc} mh:{player.Reports.mh}";
+            }
+            return (str, Color.Brown);
         }
     }
 }

@@ -36,6 +36,10 @@ namespace net.hakuryuu.WargameOverlay.Services
         {
             var aobRes = await PerformAoB();
             var addr = await GetAddresses(aobRes.firstAddressOptions, aobRes.lastAddress);
+            if (addr == null)
+            {
+                return "404";
+            }
             return await GetJsonFromMemory(addr);
         }
 
@@ -63,12 +67,15 @@ namespace net.hakuryuu.WargameOverlay.Services
             {
                 case true:
 
-                    /*Task<IEnumerable<long>>*/ var start = _memdll.AoBScan(HEADER_START, RAM_WRTIEABLE, RAM_EXECUTABLE).Result;
-                    /*Task<IEnumerable<long>>*/ var end = _memdll.AoBScan(HEADER_END, RAM_WRTIEABLE, RAM_EXECUTABLE).Result;
+                    /*Task<IEnumerable<long>>*/ var start = _memdll.AoBScan(HEADER_START, RAM_WRTIEABLE, RAM_EXECUTABLE).Result.ToList();
+                    /*Task<IEnumerable<long>>*/ var end = _memdll.AoBScan(HEADER_END, RAM_WRTIEABLE, RAM_EXECUTABLE).Result.ToList();
 
-                   // await Task.WhenAll(start, end);
+                    // await Task.WhenAll(start, end);
 
-                    return (start.ToList(), end.FirstOrDefault());
+                    // Remove all possible last Addresses which are before the first start address
+                    // The game saves partial headers in the memory, those are to be avoided
+                    end.RemoveAll(x => x < start.FirstOrDefault());
+                    return (start, end.FirstOrDefault());
             }
 
             return (null,0); // Default return
@@ -105,7 +112,7 @@ namespace net.hakuryuu.WargameOverlay.Services
                     }
                     break;
                 default:
-                    throw new Exception("Could not find lastAddress, are you sure Wargame is still running?");
+                    return null;
             }
             return null;
         }

@@ -37,7 +37,8 @@ namespace net.hakuryuu.WargameOverlay
             try
             {
                 _rawData = _dataReader.GetRawData().Result;
-                rtbResult.Text = _rawData;
+                //rtbResult.Text = _rawData;
+                _overlay.SetRawData(_rawData);
             }
             catch (Exception ex)
             {

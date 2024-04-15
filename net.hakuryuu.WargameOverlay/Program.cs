@@ -32,6 +32,7 @@ namespace net.hakuryuu.WargameOverlay
                     services.AddTransient<IDataExtractor, DataExtractor>();
                     services.AddTransient<Form1>();
                     services.AddTransient<Overlay>();
+                    services.AddTransient<IRankedInfo, RankedInfo>();
                 });
         }
     }
