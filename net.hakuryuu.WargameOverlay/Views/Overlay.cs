@@ -37,7 +37,17 @@ namespace net.hakuryuu.WargameOverlay.Views
                 var res = _dataExtractor.GetPlayers();
 
                 var player1 = _rankedInfo.GetRankedReports(res[0].PlayerUserId).Result;
-                var player2 = _rankedInfo.GetRankedReports(res[1].PlayerUserId).Result;
+                ReportedPlayer player2;
+                if (res.Count > 1)
+                {
+                     player2 = _rankedInfo.GetRankedReports(res[1].PlayerUserId).Result;
+                }
+                else
+                {
+                    player2 = new();
+                }
+
+                
 
                 lblReportsPlayer1.Visible = true;
                 lblPlayer2.Visible = true;
