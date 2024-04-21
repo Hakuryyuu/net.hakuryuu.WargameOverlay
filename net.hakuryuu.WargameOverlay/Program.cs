@@ -33,6 +33,7 @@ namespace net.hakuryuu.WargameOverlay
                     services.AddTransient<Form1>();
                     services.AddTransient<Overlay>();
                     services.AddTransient<IRankedInfo, RankedInfo>();
+                    services.AddSingleton<IReplayService, ReplayService>();
                 });
         }
     }

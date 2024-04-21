@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace net.hakuryuu.WargameOverlay.Services
 
         //private const string HEADER_START = "7B 22 67 61 6D 65 22 3A 7B 22 56 65 72 73 69 6F 6E 22 3A 22 ?? ?? ?? ?? ?? ?? 22 2C 22 4D 61 70 22 3A 22 ?? ?? ?? ?? ??";
         private const string HEADER_START = "7B 22 67 61 6D 65 22 3A 7B 22";
-        private const string HEADER_END = "22 3A 22 37 22 7D 7D"; //"22 2C 22 50 6C 61 79 65 72 49 6E 63 6F 6D 65 52 61 74 65 22 3A 22 37 22 7D 7D ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??";
+        private const string HEADER_END = "65 22 3A 22 37 22 7D 7D"; //"22 2C 22 50 6C 61 79 65 72 49 6E 63 6F 6D 65 52 61 74 65 22 3A 22 37 22 7D 7D ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ??";
         private const bool RAM_EXECUTABLE = false;
         private const bool RAM_WRTIEABLE = true;
         private const int ROW = 32;
@@ -25,11 +26,6 @@ namespace net.hakuryuu.WargameOverlay.Services
         public DataReader()
         {
             _memdll = new();
-        }
-
-        public async Task GetFullGameData()
-        {
-
         }
 
         public async Task<string> GetRawData()
@@ -42,12 +38,6 @@ namespace net.hakuryuu.WargameOverlay.Services
             }
             return await GetJsonFromMemory(addr);
         }
-
-
-        //public async Task<Players> GetPlayers()
-        //{
-
-        //}
 
         private async Task<bool> AccessProcess()
         {
@@ -107,8 +97,6 @@ namespace net.hakuryuu.WargameOverlay.Services
                             var addresses = lastAddress - firstAddressOptions.First();
                             ExtractAddresses(ref addresses);
                           return addressList;
-                        default:
-                            throw new Exception("Could not find firstAddress, are you sure Wargame is still running?");
                     }
                     break;
                 default:
